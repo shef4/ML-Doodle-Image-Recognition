@@ -29,13 +29,12 @@ class SVM_Classifier:
         #return X and y
         X = []
         y = []
-        for root, dirs, files in os.walk(self.data_path):
-            for file in files:
-                if file.endswith(".jpg"):
-                    img = cv2.imread(os.path.join(root, file), 0)
-                    img = img.flatten()
-                    X.append(img)
-                    y.append(root.split("/")[-1])
+        #load .npy files from data_path
+        for file in os.listdir(self.data_path):
+            if file == "X_data.npy":
+                X.append(np.load(os.path.join(self.data_path, file)))
+            elif file == "Y_labels.npy":
+                y.append(np.load(os.path.join(self.data_path, file)))
         X = np.array(X)
         y = np.array(y)
         return X, y
