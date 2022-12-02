@@ -4,15 +4,15 @@
 # 1. number of components
 # 3. kernel type
 # 4. C value
-from Image_Preprocessor import Preprocess_Image
 from Model_Trainer import Model_Trainer
 from matplotlib import pyplot as plt
 import os
 import sys
 
 class Model_Comparor:
-    def __init__(self, train_data_path, model_path, model_name, num_components, kernel_type, C):
+    def __init__(self, train_data_path, model_type, model_path, model_name,num_components, kernel_type, C):
         self.train_data_path = train_data_path
+        self.model_type = model_type
         self.model_path = model_path
         self.model_name = model_name
         self.num_components = num_components
@@ -50,7 +50,7 @@ class Model_Comparor:
             elif param_name == "C":
                 self.C = i
 
-            model_trainer = Model_Trainer(self.train_data_path, self.model_path, self.model_name, self.num_components, self.kernel_type, self.C)
+            model_trainer = Model_Trainer(self.train_data_path, self.model_type, self.model_path, self.model_name, self.num_components, self.kernel_type, self.C)
             model_trainer.main()
             accuracy_array.append(model_trainer.val_accuracy)
             std_array.append(model_trainer.val_std)
@@ -79,14 +79,30 @@ class Model_Comparor:
         self.hyperparameter_accuracy("C")
 
 if __name__ == "__main__":
-    train_data_path = "data/dev/train"
-    model_path = "models"
+    #TODO: change the model type and model name wbefore running
+    model_type = "SVM"
     model_name = "model"
+
+    #set memory path for model
+    train_data_path = "data/dev/train"
+    if model_type == "SVM":
+        model_path = "models/svm_weights"
+    elif model_type == "CNN":
+        model_path = "models/cnn_weights"
+    elif model_type == "KNN":
+        model_path = "models/knn_weights"
+
+    #set hyperparameters
+    #SVM default parameters
     num_components = 10
     kernel_type = "linear"
     C = 1
+    #CNN default parameters
+    #TODO: add CNN default parameters
+    #KNN default parameters
+    #TODO: add KNN default parameters
 
-    model_comparor = Model_Comparor(train_data_path, model_path, model_name, num_components, kernel_type, C)
+    model_comparor = Model_Comparor(train_data_path, model_type, model_path, model_name, num_components, kernel_type, C)
     model_comparor.run_comparisons()
 
 
